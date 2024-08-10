@@ -22,6 +22,18 @@ if /I "%OUTPUT%" neq "True" if /I "%OUTPUT%" neq "False" (
     exit /b 1
 )
 
+REM Define the files and directories to be checked
+echo Verifying if all mandatory files exist...
+set "CHECK_FILES_DIRS=.github\workflows\pipeline.yml .github\workflows\release.yml tests .flake8 .gitignore CHANGELOG.md conftest.py LICENSE pytest.ini README.md requirements.txt setup.py"
+
+REM Check for the existence of each required file or directory
+for %%f in (%CHECK_FILES_DIRS%) do (
+    if not exist "%%f" (
+        echo Error: Required file or directory %%f is missing.
+        exit /b 1
+    )
+)
+
 REM Execute flake8 command based on the argument
 if /I "%OUTPUT%"=="True" (
     REM Delete the files if they exist
